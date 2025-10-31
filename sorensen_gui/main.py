@@ -7,7 +7,7 @@ from .app import SorensenGUI
 
 def main() -> int:
     """
-    Main entry point for the application.
+    Run the Sorensen GUI application.
 
     Returns:
         Exit code

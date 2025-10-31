@@ -195,7 +195,7 @@ class SorensenGUI(QMainWindow):
         return group
 
     def setup_timers(self) -> None:
-        """Setup timers for periodic updates."""
+        """Set up timers for periodic updates."""
         # Display update timer
         self.display_timer = QTimer()
         self.display_timer.timeout.connect(self.update_display)
