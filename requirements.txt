@@ -1,0 +1,4 @@
+# Sorensen DCS Power Supply GUI Application Dependencies
+PyQt6==6.6.1
+pyserial==3.5
+pytest==7.4.3
