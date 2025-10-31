@@ -5,6 +5,11 @@ This is a Python project: Standard PLT python project framework
 
 ## Coding Standards
 - Follow PEP 8 style guidelines
+- Follow PEP 257 docstring conventions:
+  - Use triple double quotes for all docstrings
+  - First line should be in imperative mood (e.g., "Calculate the sum" not "Calculates the sum")
+  - One-line docstrings should be on a single line
+  - Multi-line docstrings should have a summary line, blank line, then detailed description
 - Use type hints for function parameters and return values
 - Write docstrings for all functions and classes
 - Prefer f-strings for string formatting
