@@ -1,0 +1,99 @@
+╔════════════════════════════════════════════════════════════════╗
+║  Sorensen DCS Power Supply Control                  [_][□][X] ║
+╠════════════════════════════════════════════════════════════════╣
+║ File   Help                                                    ║
+╠════════════════════════════════════════════════════════════════╣
+║                                                                ║
+║  ┌─ COM Port Selection ───────────────────────────────────┐   ║
+║  │                                                         │   ║
+║  │  Port: [ COM3 - AMREL,DCS 60-18E... ▼] [Find DCS]     │   ║
+║  │                                                         │   ║
+║  │        [Connect]  [Disconnect]                         │   ║
+║  │                                                         │   ║
+║  └─────────────────────────────────────────────────────────┘   ║
+║                                                                ║
+║  Status: Connected to COM3                                     ║
+║                                                                ║
+║  ┌─ Device Information ───────────────────────────────────┐   ║
+║  │                                                         │   ║
+║  │  Model:        DCS 60-18E M9C                          │   ║
+║  │  Serial Number: 12345                                  │   ║
+║  │  Max Voltage:  60.000 V                                │   ║
+║  │  Max Current:  18.000 A                                │   ║
+║  │                                                         │   ║
+║  └─────────────────────────────────────────────────────────┘   ║
+║                                                                ║
+║  ┌─ Current Readings ──────────────────────────────────────┐  ║
+║  │                                                          │  ║
+║  │  Voltage:  5.000 V                                      │  ║
+║  │  Current:  2.350 A                                      │  ║
+║  │                                                          │  ║
+║  └──────────────────────────────────────────────────────────┘  ║
+║                                                                ║
+║  ┌─ Control ───────────────────────────────────────────────┐  ║
+║  │                                                          │  ║
+║  │  Set Voltage:  [ 5.000 ] V                             │  ║
+║  │                [Set Voltage]                            │  ║
+║  │                                                          │  ║
+║  │  Set Current:  [ 3.000 ] A                             │  ║
+║  │                [Set Current]                            │  ║
+║  │                                                          │  ║
+║  └──────────────────────────────────────────────────────────┘  ║
+║                                                                ║
+╚════════════════════════════════════════════════════════════════╝
+
+KEY FEATURES:
+
+1. COM Port Selection Group (Top)
+   - Dropdown showing available ports or discovered DCS devices
+   - "Find DCS Devices" button - Scans all ports for DCS devices
+   - "Connect" button - Connect to selected port
+   - "Disconnect" button - Safely disconnect (returns to local control)
+
+2. Status Label
+   - Shows current connection status and scan progress
+   - Updates during operations
+
+3. Device Information Group
+   - Displays model, serial number, and maximum ratings
+   - Populated after successful connection
+
+4. Current Readings Group
+   - Real-time voltage and current display
+   - Updates every second when connected
+   - Bold, large font for easy reading
+
+5. Control Group
+   - Spinboxes for setting voltage and current
+   - Range automatically adjusted to device capabilities
+   - Set buttons apply the values to the power supply
+
+WORKFLOW:
+
+Method 1 - Automatic Discovery (Recommended):
+  1. Click "Find DCS Devices"
+  2. GUI scans all COM ports
+  3. Dropdown populated with devices found
+  4. Select device from dropdown
+  5. Click "Connect"
+
+Method 2 - Manual Selection:
+  1. Select port from dropdown (shows all available ports)
+  2. Click "Connect"
+
+After Connection:
+  - View real-time readings
+  - Adjust voltage/current using spinboxes
+  - Click "Set Voltage" or "Set Current" to apply
+  - Click "Disconnect" when finished
+
+CROSS-PLATFORM:
+  - Windows: Shows COM1, COM3, etc.
+  - Linux: Shows /dev/ttyUSB0, /dev/ttyS0, etc.
+  - macOS: Shows /dev/tty.* devices
+
+SAFETY FEATURES:
+  - Automatic return to local control on disconnect
+  - Range validation based on device capabilities
+  - Clear status messages for all operations
+  - Graceful error handling
