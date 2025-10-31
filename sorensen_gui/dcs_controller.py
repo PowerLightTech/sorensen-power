@@ -4,8 +4,14 @@ import sys
 from pathlib import Path
 from typing import Optional, Tuple
 
-# Add parent directory to path to import sorensenPower (noqa: E402)
-sys.path.insert(0, str(Path(__file__).parent.parent))
+# Add parent directory to path to import sorensenPower from repository root
+# Note: In a production environment, sorensenPower should be made a proper package
+# and installed as a dependency. This approach is used to maintain minimal changes
+# to the existing repository structure.
+_parent_dir = str(Path(__file__).parent.parent)
+if _parent_dir not in sys.path:
+    sys.path.insert(0, _parent_dir)
+
 from sorensenPower import sorensenPower  # noqa: E402
 
 
