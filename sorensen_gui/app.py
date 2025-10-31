@@ -12,13 +12,13 @@ from PyQt6.QtWidgets import (
 from PyQt6.QtCore import QTimer
 from PyQt6.QtGui import QAction
 
-from .version import __version__, __app_name__
-from .resources import (
+from version import __version__, __app_name__
+from resources import (
     DEFAULT_LOG_DIR, DEFAULT_LOG_FILENAME_FORMAT, DEFAULT_LOG_INTERVAL,
     DEFAULT_PORT, DISPLAY_UPDATE_INTERVAL
 )
-from .dcs_controller import DCSController
-from .logging_utils import CSVLogger
+from dcs_controller import DCSController
+from logging_utils import CSVLogger
 
 
 class SorensenGUI(QMainWindow):

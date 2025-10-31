@@ -2,7 +2,7 @@
 
 import sys
 from PyQt6.QtWidgets import QApplication
-from .app import SorensenGUI
+from app import SorensenGUI
 
 
 def main() -> int:
