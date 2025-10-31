@@ -74,8 +74,9 @@ class TestPortScanner:
     @patch('serial.Serial')
     def test_test_port_for_dcs_exception(self, mock_serial):
         """Test port that raises exception."""
-        # Mock serial port that raises exception
-        mock_serial.side_effect = Exception("Port not available")
+        # Mock serial port that raises SerialException
+        import serial
+        mock_serial.side_effect = serial.SerialException("Port not available")
         
         success, device_info = PortScanner.test_port_for_dcs('COM1')
         

@@ -21,6 +21,9 @@ BAUDRATE = 19200
 TIMEOUT = 0.5
 SCAN_TIMEOUT = 0.25
 
+# GUI update intervals (milliseconds)
+READING_UPDATE_INTERVAL_MS = 1000
+
 # Application info
 APP_NAME = "Sorensen DCS Power Supply Control"
 APP_AUTHOR = "PowerLight Technologies"

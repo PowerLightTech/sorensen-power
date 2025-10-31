@@ -11,13 +11,18 @@ from PyQt6.QtWidgets import (
 from PyQt6.QtCore import Qt, QTimer, pyqtSignal
 from PyQt6.QtGui import QAction
 
-# Add parent directory to path to import sorensenPower
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from sorensenPower import sorensenPower
+# Import sorensenPower from parent directory
+# When properly installed as a package, this should use proper package structure
+try:
+    from sorensenPower import sorensenPower
+except ImportError:
+    # Fallback for development: add parent directory to path
+    sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+    from sorensenPower import sorensenPower
 
 from .port_scanner import PortScanner
 from .version import __version__
-from .resources import APP_NAME
+from .resources import APP_NAME, BAUDRATE, READING_UPDATE_INTERVAL_MS
 
 
 class SorensenGUI(QMainWindow):
@@ -226,7 +231,7 @@ class SorensenGUI(QMainWindow):
             self.status_label.setText(f"Status: Connecting to {port_name}...")
             QApplication.processEvents()
             
-            self.power_supply = sorensenPower(portName=port_name, baudrate=19200, debug=False)
+            self.power_supply = sorensenPower(portName=port_name, baudrate=BAUDRATE, debug=False)
             
             # Get device info
             model = self.power_supply.getModel()
@@ -259,7 +264,7 @@ class SorensenGUI(QMainWindow):
             self.status_label.setText(f"Status: Connected to {port_name}")
             
             # Start update timer
-            self.update_timer.start(1000)  # Update every second
+            self.update_timer.start(READING_UPDATE_INTERVAL_MS)
             
         except Exception as e:
             QMessageBox.critical(self, "Connection Error", f"Failed to connect: {str(e)}")

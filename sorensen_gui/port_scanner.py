@@ -67,7 +67,7 @@ class PortScanner:
             else:
                 return (False, None)
                 
-        except (serial.SerialException, OSError, Exception):
+        except (serial.SerialException, OSError):
             # Port is busy, doesn't exist, or other error
             return (False, None)
     
