@@ -4,6 +4,8 @@ A PyQt6-based graphical user interface for controlling and monitoring Sorensen D
 
 ## Features
 
+- **Automatic device detection**: Scan available ports to find DCS devices with "Find DCS" button
+- **OS-aware port scanning**: Automatically detects Windows, Linux, or macOS and scans appropriate ports
 - **Real-time monitoring**: Display voltage and current measurements in real-time
 - **User controls**: Set voltage and current limits from the GUI
 - **Data logging**: Log timestamp, voltage, and current measurements to CSV files
@@ -42,7 +44,14 @@ main()
 ## Application Interface
 
 ### Connection
-1. Enter the serial port (e.g., `/dev/ttyUSB0` on Linux or `COM1` on Windows)
+
+**Option 1: Auto-detect (Recommended)**
+1. Click "Find DCS" to scan for devices
+2. Select a device from the dropdown menu
+3. Click "Connect" to establish connection
+
+**Option 2: Manual Entry**
+1. Enter the serial port manually (e.g., `/dev/ttyUSB0` on Linux or `COM3` on Windows)
 2. Click "Connect" to establish connection with the power supply
 
 ### Measurements
@@ -77,6 +86,7 @@ sorensen_gui/
 ├── app.py                # Main GUI logic
 ├── dcs_controller.py     # Serial/SCPI communications wrapper
 ├── logging_utils.py      # CSV logging utilities
+├── port_scanner.py       # Port scanning and DCS detection
 ├── main.py               # Application entry point
 ├── version.py            # Version information
 ├── resources.py          # Constants and default values
@@ -85,6 +95,7 @@ sorensen_gui/
     ├── __init__.py
     ├── test_dcs_controller.py
     ├── test_logging_utils.py
+    ├── test_port_scanner.py
     ├── test_resources.py
     └── test_version.py
 ```

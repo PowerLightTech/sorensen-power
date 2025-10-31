@@ -49,6 +49,8 @@ A graphical user interface for interactive control and monitoring of Sorensen DC
 **Directory**: `sorensen_gui/`
 
 **Features**:
+- Automatic DCS device detection with "Find DCS" button
+- OS-aware serial port scanning (Windows, Linux, macOS)
 - Real-time voltage and current display
 - Interactive controls for setting voltage and current limits
 - CSV data logging with configurable interval
@@ -102,7 +104,7 @@ Run unit tests for the GUI application:
 pytest sorensen_gui/tests/
 ```
 
-All 27 tests should pass.
+All 40 tests should pass.
 
 ## License
 

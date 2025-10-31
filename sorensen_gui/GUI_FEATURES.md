@@ -17,11 +17,19 @@ The Sorensen DCS Power Supply GUI is a PyQt6-based desktop application for contr
 ### Main Window Sections
 
 #### 1. Connection Group
-- **Serial Port Input**: Text field for entering port name (default: /dev/ttyUSB0)
+- **Serial Port Selection**: Combo box for selecting port name (default: /dev/ttyUSB0)
+  - Editable to allow manual entry of port names
+  - Populated with found DCS devices after scanning
+  - Displays port and device identification for found devices
+- **Find DCS Button**: Scan available ports for DCS devices
+  - Detects OS (Windows, Linux, macOS) and scans appropriate ports
+  - Tests each port using the *IDN? command
+  - Populates combo box with found devices
+  - Shows informative message with scan results
 - **Connect/Disconnect Button**: Toggle connection to the power supply
   - Shows "Connect" when disconnected
   - Shows "Disconnect" when connected
-  - Disables port input when connected
+  - Disables port selection and Find DCS button when connected
 
 #### 2. Measurements Group
 - **Voltage Display**: Large bold text showing current voltage (format: "X.XXX V")
@@ -70,7 +78,18 @@ The Sorensen DCS Power Supply GUI is a PyQt6-based desktop application for contr
 ## User Workflows
 
 ### Connecting to Power Supply
-1. Enter serial port in the Connection group
+
+#### Method 1: Auto-detect (Recommended)
+1. Click "Find DCS" button
+2. Wait for scan to complete (typically a few seconds)
+3. Select a device from the populated combo box
+4. Click "Connect" button
+5. Status shows "Connected to [port]"
+6. Control buttons become enabled
+7. Real-time measurements begin updating
+
+#### Method 2: Manual Entry
+1. Type or select serial port in the combo box (e.g., COM3, /dev/ttyUSB0)
 2. Click "Connect" button
 3. Status shows "Connected to [port]"
 4. Control buttons become enabled
@@ -117,9 +136,10 @@ The application provides graceful error handling:
 
 ## Testing Status
 
-All unit tests pass successfully (27 tests):
+All unit tests pass successfully (40 tests):
 - ✓ DCSController tests (12 tests)
 - ✓ CSVLogger tests (6 tests)
+- ✓ PortScanner tests (13 tests)
 - ✓ Resources tests (6 tests)
 - ✓ Version tests (3 tests)
 
