@@ -7,7 +7,7 @@ from typing import Optional
 from PyQt6.QtWidgets import (
     QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QGridLayout,
     QLabel, QLineEdit, QPushButton, QGroupBox, QFileDialog,
-    QMessageBox, QDoubleSpinBox
+    QMessageBox, QDoubleSpinBox, QComboBox
 )
 from PyQt6.QtCore import QTimer
 from PyQt6.QtGui import QAction
@@ -19,6 +19,7 @@ from resources import (
 )
 from dcs_controller import DCSController
 from logging_utils import CSVLogger
+from port_scanner import scan_for_dcs_devices
 
 
 class SorensenGUI(QMainWindow):
@@ -87,11 +88,19 @@ class SorensenGUI(QMainWindow):
         group = QGroupBox("Connection")
         layout = QHBoxLayout()
 
-        # Port input
+        # Port selection combo box
         layout.addWidget(QLabel("Port:"))
-        self.port_input = QLineEdit(DEFAULT_PORT)
-        self.port_input.setMaximumWidth(200)
-        layout.addWidget(self.port_input)
+        self.port_combo = QComboBox()
+        self.port_combo.setEditable(True)
+        self.port_combo.setMinimumWidth(200)
+        self.port_combo.addItem(DEFAULT_PORT)
+        self.port_combo.setCurrentText(DEFAULT_PORT)
+        layout.addWidget(self.port_combo)
+
+        # Find DCS button
+        self.find_button = QPushButton("Find DCS")
+        self.find_button.clicked.connect(self.scan_for_devices)
+        layout.addWidget(self.find_button)
 
         # Connect button
         self.connect_button = QPushButton("Connect")
@@ -204,17 +213,59 @@ class SorensenGUI(QMainWindow):
         self.log_timer = QTimer()
         self.log_timer.timeout.connect(self.log_data)
 
+    def scan_for_devices(self) -> None:
+        """Scan for DCS devices on available ports."""
+        self.status_label.setText("Scanning for DCS devices...")
+        self.find_button.setEnabled(False)
+        
+        # Perform scan in a way that doesn't freeze the UI
+        # For now, we'll do it synchronously but could be improved with threading
+        found_devices = scan_for_dcs_devices()
+        
+        if found_devices:
+            # Clear existing items and add found devices
+            self.port_combo.clear()
+            for port, identification in found_devices:
+                # Format: "COM3 - SORENSEN,DCS60-18E,123456,1.0"
+                display_text = f"{port} - {identification}"
+                self.port_combo.addItem(display_text, port)
+            
+            self.status_label.setText(f"Found {len(found_devices)} DCS device(s)")
+            QMessageBox.information(
+                self,
+                "DCS Devices Found",
+                f"Found {len(found_devices)} DCS device(s):\n" +
+                "\n".join([f"  • {port}: {ident}" for port, ident in found_devices])
+            )
+        else:
+            self.status_label.setText("No DCS devices found")
+            QMessageBox.warning(
+                self,
+                "No Devices Found",
+                "No DCS devices were found on available ports.\n\n"
+                "Please check:\n"
+                "  • Device is powered on\n"
+                "  • Serial cable is connected\n"
+                "  • Device drivers are installed"
+            )
+        
+        self.find_button.setEnabled(True)
+
     def toggle_connection(self) -> None:
         """Toggle connection to the power supply."""
         if self.controller is None or not self.controller.is_connected():
             # Connect
-            port = self.port_input.text()
+            # Get the port from combo box data (if available) or text
+            current_data = self.port_combo.currentData()
+            port = current_data if current_data else self.port_combo.currentText()
+            
             self.controller = DCSController(port)
 
             if self.controller.connect():
                 self.status_label.setText(f"Connected to {port}")
                 self.connect_button.setText("Disconnect")
-                self.port_input.setEnabled(False)
+                self.port_combo.setEnabled(False)
+                self.find_button.setEnabled(False)
                 self.set_voltage_button.setEnabled(True)
                 self.set_current_button.setEnabled(True)
                 self.log_button.setEnabled(True)
@@ -242,7 +293,8 @@ class SorensenGUI(QMainWindow):
             self.controller.disconnect()
             self.status_label.setText("Not connected")
             self.connect_button.setText("Connect")
-            self.port_input.setEnabled(True)
+            self.port_combo.setEnabled(True)
+            self.find_button.setEnabled(True)
             self.set_voltage_button.setEnabled(False)
             self.set_current_button.setEnabled(False)
             self.log_button.setEnabled(False)
