@@ -1,0 +1,6 @@
+# Core dependencies
+pyserial==3.5
+PyQt6==6.6.1
+
+# Testing dependencies (optional)
+pytest==7.4.3
