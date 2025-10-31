@@ -132,12 +132,25 @@ class TestProbeDCSPort:
         mock_serial = MagicMock()
         mock_serial_class.return_value = mock_serial
         
-        # Mock readline to return lowercase
+        # Mock readline to return lowercase (but still contains SORENSEN when uppercased)
         mock_serial.readline.return_value = b"sorensen,dcs60-18e,123456,1.0\r\n"
         
         result = probe_dcs_port("COM3")
         
         assert result == "sorensen,dcs60-18e,123456,1.0"
+
+    @patch('sorensen_gui.port_scanner.serial.Serial')
+    def test_dcs_only_response(self, mock_serial_class):
+        """Test that response with only DCS but not SORENSEN is rejected."""
+        mock_serial = MagicMock()
+        mock_serial_class.return_value = mock_serial
+        
+        # Mock readline to return response with DCS but not SORENSEN
+        mock_serial.readline.return_value = b"ACME,DCS100,999999,1.0\r\n"
+        
+        result = probe_dcs_port("COM3")
+        
+        assert result is None
 
     @patch('sorensen_gui.port_scanner.serial.Serial')
     def test_non_dcs_device(self, mock_serial_class):

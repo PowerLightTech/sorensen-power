@@ -9,7 +9,7 @@ from PyQt6.QtWidgets import (
     QLabel, QLineEdit, QPushButton, QGroupBox, QFileDialog,
     QMessageBox, QDoubleSpinBox, QComboBox
 )
-from PyQt6.QtCore import QTimer
+from PyQt6.QtCore import QTimer, QThread, pyqtSignal
 from PyQt6.QtGui import QAction
 
 from version import __version__, __app_name__
@@ -22,6 +22,17 @@ from logging_utils import CSVLogger
 from port_scanner import scan_for_dcs_devices
 
 
+class ScannerThread(QThread):
+    """Thread for scanning ports without blocking the UI."""
+
+    scan_complete = pyqtSignal(list)
+
+    def run(self) -> None:
+        """Run the port scan in background."""
+        devices = scan_for_dcs_devices()
+        self.scan_complete.emit(devices)
+
+
 class SorensenGUI(QMainWindow):
     """Main window for Sorensen DCS Power Supply control application."""
 
@@ -32,6 +43,7 @@ class SorensenGUI(QMainWindow):
         self.logger: Optional[CSVLogger] = None
         self.logging_active = False
         self.log_filepath = ""
+        self.scanner_thread: Optional[ScannerThread] = None
 
         self.init_ui()
         self.setup_timers()
@@ -215,13 +227,23 @@ class SorensenGUI(QMainWindow):
 
     def scan_for_devices(self) -> None:
         """Scan for DCS devices on available ports."""
+        # Start scanning in background thread to avoid UI freeze
         self.status_label.setText("Scanning for DCS devices...")
         self.find_button.setEnabled(False)
+        self.connect_button.setEnabled(False)
         
-        # Perform scan in a way that doesn't freeze the UI
-        # For now, we'll do it synchronously but could be improved with threading
-        found_devices = scan_for_dcs_devices()
-        
+        # Create and start scanner thread
+        self.scanner_thread = ScannerThread()
+        self.scanner_thread.scan_complete.connect(self.on_scan_complete)
+        self.scanner_thread.start()
+
+    def on_scan_complete(self, found_devices: list) -> None:
+        """
+        Handle completion of device scan.
+
+        Args:
+            found_devices: List of (port, identification) tuples
+        """
         if found_devices:
             # Clear existing items and add found devices
             self.port_combo.clear()
@@ -250,6 +272,7 @@ class SorensenGUI(QMainWindow):
             )
         
         self.find_button.setEnabled(True)
+        self.connect_button.setEnabled(True)
 
     def toggle_connection(self) -> None:
         """Toggle connection to the power supply."""

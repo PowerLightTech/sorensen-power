@@ -76,7 +76,8 @@ def probe_dcs_port(port: str, baudrate: int = 19200, timeout: float = 0.5) -> Op
         
         # Check if response looks like a DCS device
         # Typical response format: "SORENSEN,DCS60-18E,123456,1.0"
-        if response and ('SORENSEN' in response.upper() or 'DCS' in response.upper()):
+        # Must contain SORENSEN to avoid false positives
+        if response and 'SORENSEN' in response.upper():
             return response
         
         return None
